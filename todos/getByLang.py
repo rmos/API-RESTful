@@ -20,13 +20,13 @@ def getByLang(event, context):
         }
     )
     
-    textToTranslate = result['Item']['text']
-    #languages = json.dumps(comprehend.detect_dominant_language(Text = textToTranslate), sort_keys=True, indent=4)
-    languages = comprehend.detect_dominant_language(Text = textToTranslate)
-    lang_code = languages['Languages'][0]['LanguageCode']
-    responseTr = translate.translate_text(Text=textToTranslate, SourceLanguageCode=lang_code,
-        TargetLanguageCode=event['pathParameters']['language'])
-    result['Item']['text'] = str(responseTr['TranslatedText'])
+    if event['pathParameters']['language'] is not None:
+        textToTranslate = result['Item']['text']
+        languages = comprehend.detect_dominant_language(Text = textToTranslate)
+        lang_code = languages['Languages'][0]['LanguageCode']
+        responseTr = translate.translate_text(Text=textToTranslate, SourceLanguageCode=lang_code,
+            TargetLanguageCode=event['pathParameters']['language'])
+        result['Item']['text'] = str(responseTr['TranslatedText'])
 
     # create a response
     response = {

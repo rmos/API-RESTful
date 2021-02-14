@@ -30,6 +30,7 @@ def get(event, context):
     # appending the data 
     z.update(y)
     # create a response
+    # cambio para renombrado de stage y ramas
     response = {
         "statusCode": 200,
         "body": json.dumps(json.dumps(z), cls=decimalencoder.DecimalEncoder)

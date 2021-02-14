@@ -20,20 +20,18 @@ def getByLang(event, context):
         }
     )
     
-    textToTranslate = "Prueba traduccion going to the jungle"
+    textToTranslate = result['Item']['text']
     #languages = json.dumps(comprehend.detect_dominant_language(Text = textToTranslate), sort_keys=True, indent=4)
-    languages_2 = comprehend.detect_dominant_language(Text = textToTranslate)
-    lang_code = languages_2[0]['LanguageCode']
-    
+    languages = comprehend.detect_dominant_language(Text = textToTranslate)
+    lang_code = languages['Languages'][0]['LanguageCode']
     responseTr = translate.translate_text(Text=textToTranslate, SourceLanguageCode=lang_code,
         TargetLanguageCode=event['pathParameters']['language'])
-    jsonBody = {'text': str(responseTr)}
+    result['Item']['text'] = str(responseTr['TranslatedText'])
 
     # create a response
     response = {
         "statusCode": 200,
-        #"body": json.dumps(result['Item'], cls=decimalencoder.DecimalEncoder)
-        "body": languages_2
+        "body": json.dumps(result['Item'], cls=decimalencoder.DecimalEncoder)
     }
     logging.warning('This will get logged to a file')
     return response
